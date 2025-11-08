@@ -1,15 +1,38 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <title>Harshit's Gamified Resume</title>
-  <script src="https://cdn.jsdelivr.net/npm/phaser@3.70.0/dist/phaser.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.0/dist/phaser.js"></script>
   <style>
-    body { margin: 0; background: #111; color: white; font-family: monospace; }
+    body { margin: 0; background: #111; color: white; font-family: monospace; overflow: hidden; }
     canvas { display: block; margin: auto; }
+    #controls {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+    }
+    #jumpBtn {
+      padding: 10px 20px;
+      font-size: 18px;
+      background: #00ffcc;
+      color: #111;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    #jumpBtn:hover { background: #00ccaa; }
   </style>
 </head>
 <body>
+
+<div id="controls">
+  <button id="jumpBtn">Jump ⬆️</button>
+</div>
+
 <script>
 const config = {
   type: Phaser.AUTO,
@@ -22,6 +45,7 @@ const config = {
 
 let player, cursors, skills, obstacles, score = 0, scoreText;
 let gameOver = false;
+let jumpAllowed = true;
 
 function preload() {
   this.load.image('ground', 'https://labs.phaser.io/assets/sprites/platform.png');
@@ -38,6 +62,7 @@ function create() {
   // Player
   player = this.physics.add.sprite(100, 350, 'player').setScale(1.5);
   player.setCollideWorldBounds(true);
+  window.player = player; // For external button access
 
   // Skills
   skills = this.physics.add.group();
@@ -53,7 +78,7 @@ function create() {
   ];
 
   skillData.forEach((name, i) => {
-    const s = skills.create(200 + i * 90, 0, 'skill');
+    const s = skills.create(250 + i * 90, 0, 'skill');
     s.setData('skillName', name);
   });
 
@@ -74,57 +99,48 @@ function create() {
   // Text
   scoreText = this.add.text(20, 20, 'Career XP: 0', { fontSize: '20px', fill: '#fff' });
 
-  // Intro message
+  // Intro text
   this.add.text(450, 60, "Run Through My Career - Harshit", { fontSize: '22px', fill: '#00ffcc' }).setOrigin(0.5);
-  this.add.text(450, 90, "Press ↑ to Jump & Collect Skills!", { fontSize: '16px', fill: '#ccc' }).setOrigin(0.5);
+  this.add.text(450, 90, "Press ↑ / SPACE / Tap to Jump & Collect Skills!", { fontSize: '16px', fill: '#ccc' }).setOrigin(0.5);
 
-  // Education popups
-  this.time.addEvent({
-    delay: 2000,
-    callback: () => showPopup(this, "🎓 Graduated from G.L.T Saraswati Bal Mandir, Nehru Nagar!"),
-    callbackScope: this
+  // Education & project messages
+  const messages = [
+    "🎓 Graduated from G.L.T Saraswati Bal Mandir, Nehru Nagar!",
+    "📘 Completed BSc (H) Electronics!",
+    "🎓 Pursuing MSc Informatics!",
+    "🏥 Built Hospital Management System Project!"
+  ];
+  messages.forEach((msg, i) => {
+    this.time.addEvent({ delay: 2000 + i * 3000, callback: () => showPopup(this, msg) });
   });
 
-  this.time.addEvent({
-    delay: 5000,
-    callback: () => showPopup(this, "📘 BSc (H) Electronics Completed!"),
-    callbackScope: this
-  });
-
-  this.time.addEvent({
-    delay: 8000,
-    callback: () => showPopup(this, "🎓 Pursuing MSc Informatics!"),
-    callbackScope: this
-  });
-
-  // Side project popup
-  this.time.addEvent({
-    delay: 12000,
-    callback: () => showPopup(this, "🏥 Built Hospital Management System Project!"),
-    callbackScope: this
-  });
-
+  // Input controls
   cursors = this.input.keyboard.createCursorKeys();
+
+  // Jump button (for mobile)
+  document.getElementById("jumpBtn").addEventListener("click", jump);
+  this.input.on('pointerdown', jump); // Mouse/touch click
 }
 
 function update() {
   if (gameOver) return;
 
+  // Jump controls (↑ or spacebar)
   if (
-  (cursors.up.isDown || this.input.keyboard.checkDown(cursors.space, 250)) &&
-  player.body.touching.down
-) {
-  player.setVelocityY(-330);
-}
+    (cursors.up.isDown || cursors.space.isDown || this.input.activePointer.isDown) &&
+    player.body.touching.down &&
+    jumpAllowed
+  ) {
+    jump();
+  }
 
-
-  // Move obstacles left
+  // Move obstacles
   obstacles.children.iterate(ob => {
     ob.x -= 3;
     if (ob.x < -50) ob.x = 950;
   });
 
-  // Move skills left
+  // Move skills
   skills.children.iterate(skill => {
     skill.x -= 2;
     if (skill.x < -50) skill.x = 950;
@@ -132,6 +148,12 @@ function update() {
 
   // End screen trigger
   if (score >= 80) showEndScreen(this);
+}
+
+function jump() {
+  if (player && player.body && player.body.touching.down) {
+    player.setVelocityY(-330);
+  }
 }
 
 function collectSkill(player, skill) {
@@ -156,14 +178,14 @@ function showPopup(scene, text) {
     backgroundColor: '#0008',
     padding: { x: 10, y: 5 }
   }).setOrigin(0.5);
-  scene.time.delayedCall(1500, () => popup.destroy(), [], scene);
+  scene.time.delayedCall(1500, () => popup.destroy());
 }
 
 function showEndScreen(scene) {
   gameOver = true;
-  scene.add.rectangle(450, 225, 900, 450, 0x000000, 0.8);
-  scene.add.text(450, 180, "🎉 You’ve Reached the End of Harshit’s Journey!", { fontSize: '22px', fill: '#00ffcc' }).setOrigin(0.5);
-  scene.add.text(450, 220, "Career XP: " + score, { fontSize: '18px', fill: '#fff' }).setOrigin(0.5);
+  scene.add.rectangle(450, 225, 900, 450, 0x000000, 0.85);
+  scene.add.text(450, 160, "🎉 You’ve Reached the End of Harshit’s Journey!", { fontSize: '22px', fill: '#00ffcc' }).setOrigin(0.5);
+  scene.add.text(450, 200, "Career XP: " + score, { fontSize: '18px', fill: '#fff' }).setOrigin(0.5);
 
   const contactText = [
     "📍 Location: New Delhi",
@@ -173,15 +195,12 @@ function showEndScreen(scene) {
   ];
 
   contactText.forEach((line, i) => {
-    scene.add.text(450, 260 + i * 30, line, { fontSize: '16px', fill: '#ccc' }).setOrigin(0.5);
+    scene.add.text(450, 240 + i * 30, line, { fontSize: '16px', fill: '#ccc' }).setOrigin(0.5);
   });
 
-  scene.add.text(450, 400, "Press F5 to Replay or ESC to Exit", { fontSize: '14px', fill: '#888' }).setOrigin(0.5);
+  scene.add.text(450, 400, "Press F5 or Tap to Replay", { fontSize: '14px', fill: '#888' }).setOrigin(0.5);
 }
-
 new Phaser.Game(config);
 </script>
 </body>
 </html>
-
-
