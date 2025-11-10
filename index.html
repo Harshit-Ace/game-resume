@@ -1,206 +1,188 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Harshit's Gamified Resume</title>
-  <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.0/dist/phaser.js"></script>
-  <style>
-    body { margin: 0; background: #111; color: white; font-family: monospace; overflow: hidden; }
-    canvas { display: block; margin: auto; }
-    #controls {
-      position: absolute;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 10;
-    }
-    #jumpBtn {
-      padding: 10px 20px;
-      font-size: 18px;
-      background: #00ffcc;
-      color: #111;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    #jumpBtn:hover { background: #00ccaa; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Harshit's Gamified Resume</title>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+  body {
+    margin: 0;
+    font-family: 'Press Start 2P', cursive;
+    background: linear-gradient(180deg, #0078ff, #00c9ff);
+    overflow-x: hidden;
+    color: #fff;
+  }
+
+  .header {
+    text-align: center;
+    padding: 2rem;
+    background: rgba(0,0,0,0.4);
+    border-bottom: 3px solid #ffcc00;
+  }
+
+  .header h1 {
+    font-size: 1.5rem;
+    color: #ffcc00;
+  }
+
+  .subway-bg {
+    background: url('https://i.ibb.co/BtLZhZt/subway-bg.png') repeat-x;
+    height: 200px;
+    animation: movebg 10s linear infinite;
+  }
+
+  @keyframes movebg {
+    from { background-position: 0; }
+    to { background-position: -1000px; }
+  }
+
+  .profile-card {
+    text-align: center;
+    padding: 2rem;
+  }
+
+  .avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 4px solid #ffcc00;
+    background: url('https://i.ibb.co/2dqHcb7/subway-runner.png') center/cover;
+    margin: 0 auto 1rem;
+  }
+
+  .xp-bar {
+    background: #333;
+    border-radius: 10px;
+    height: 20px;
+    width: 80%;
+    margin: 1rem auto;
+    overflow: hidden;
+  }
+
+  .xp-progress {
+    background: linear-gradient(90deg, #ffcc00, #ff6600);
+    width: 60%;
+    height: 100%;
+    animation: xpFill 2s ease-out forwards;
+  }
+
+  @keyframes xpFill {
+    from { width: 0; }
+    to { width: 60%; }
+  }
+
+  .section {
+    margin: 2rem;
+    padding: 1.5rem;
+    background: rgba(0,0,0,0.4);
+    border-radius: 15px;
+    border: 2px solid #ffcc00;
+  }
+
+  h2 {
+    color: #ffcc00;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  ul {
+    list-style-type: none;
+    padding: 0;
+    line-height: 1.8;
+  }
+
+  .footer {
+    text-align: center;
+    padding: 1rem;
+    font-size: 0.8rem;
+    background: rgba(0,0,0,0.5);
+    border-top: 3px solid #ffcc00;
+  }
+
+  .coin {
+    width: 30px;
+    position: absolute;
+    animation: coinFall 6s linear infinite;
+  }
+
+  @keyframes coinFall {
+    0% { top: -50px; left: calc(100% * var(--pos)); }
+    100% { top: 110vh; left: calc(100% * var(--pos)); }
+  }
+</style>
 </head>
 <body>
 
-<div id="controls">
-  <button id="jumpBtn">Jump ⬆️</button>
+<div class="header">
+  <h1>🎮 Harshit — The Data Explorer</h1>
+  <p>Location: New Delhi | Email: rharshit1111@gmail.com</p>
+</div>
+
+<div class="subway-bg"></div>
+
+<div class="profile-card">
+  <div class="avatar"></div>
+  <h2>Level 01 – Rising Coder</h2>
+  <div class="xp-bar"><div class="xp-progress"></div></div>
+  <p>“Every bug fixed is one step closer to leveling up.”</p>
+</div>
+
+<div class="section">
+  <h2>⚙️ Core Skills (Power-Ups)</h2>
+  <ul>
+    <li>Python — Intermediate</li>
+    <li>SQL — Intermediate</li>
+    <li>C/C++ — Intermediate</li>
+    <li>Java — Beginner</li>
+    <li>HTML/CSS — Beginner</li>
+    <li>Power BI — Beginner</li>
+    <li>Communication — Expert</li>
+    <li>Project Management — Skilled</li>
+  </ul>
+</div>
+
+<div class="section">
+  <h2>🎯 Side Quest</h2>
+  <p><strong>Hospital Management System</strong><br>
+  Designed a data-driven system to manage patients, doctors, staff, and appointments efficiently.</p>
+</div>
+
+<div class="section">
+  <h2>🎓 Education Track</h2>
+  <ul>
+    <li><strong>B.Sc (Hons) Electronics</strong> — Completed</li>
+    <li><strong>M.Sc Informatics</strong> — In Progress</li>
+    <li>School: G.L.T Saraswati Bal Mandir, Nehru Nagar</li>
+  </ul>
+</div>
+
+<div class="section">
+  <h2>🏆 Achievements</h2>
+  <ul>
+    <li>Completed a functional hospital data system</li>
+    <li>Solid foundation in multi-language programming</li>
+    <li>Strong communication & leadership skills</li>
+  </ul>
+</div>
+
+<div class="footer">
+  <p>🚀 Keep Surfing & Keep Coding! | Made by Harshit</p>
 </div>
 
 <script>
-const config = {
-  type: Phaser.AUTO,
-  width: 900,
-  height: 450,
-  backgroundColor: "#20232a",
-  physics: { default: "arcade", arcade: { gravity: { y: 400 }, debug: false } },
-  scene: { preload, create, update }
-};
-
-let player, cursors, skills, obstacles, score = 0, scoreText;
-let gameOver = false;
-let jumpAllowed = true;
-
-function preload() {
-  this.load.image('ground', 'https://labs.phaser.io/assets/sprites/platform.png');
-  this.load.image('skill', 'https://labs.phaser.io/assets/sprites/star.png');
-  this.load.image('obstacle', 'https://labs.phaser.io/assets/sprites/red.png');
-  this.load.image('player', 'https://labs.phaser.io/assets/sprites/phaser-dude.png');
-}
-
-function create() {
-  // Ground
-  const ground = this.physics.add.staticGroup();
-  ground.create(450, 440, 'ground').setScale(3).refreshBody();
-
-  // Player
-  player = this.physics.add.sprite(100, 350, 'player').setScale(1.5);
-  player.setCollideWorldBounds(true);
-  window.player = player; // For external button access
-
-  // Skills
-  skills = this.physics.add.group();
-  const skillData = [
-    "SQL (Intermediate)",
-    "Python (Intermediate)",
-    "C/C++ (Intermediate)",
-    "Java (Beginner)",
-    "HTML/CSS (Beginner)",
-    "Power BI (Beginner)",
-    "Communication",
-    "Project Management"
-  ];
-
-  skillData.forEach((name, i) => {
-    const s = skills.create(250 + i * 90, 0, 'skill');
-    s.setData('skillName', name);
-  });
-
-  // Obstacles
-  obstacles = this.physics.add.group({
-    key: 'obstacle',
-    repeat: 4,
-    setXY: { x: 400, y: 0, stepX: 150 }
-  });
-
-  // Colliders
-  this.physics.add.collider(player, ground);
-  this.physics.add.collider(skills, ground);
-  this.physics.add.collider(obstacles, ground);
-  this.physics.add.overlap(player, skills, collectSkill, null, this);
-  this.physics.add.collider(player, obstacles, hitObstacle, null, this);
-
-  // Text
-  scoreText = this.add.text(20, 20, 'Career XP: 0', { fontSize: '20px', fill: '#fff' });
-
-  // Intro text
-  this.add.text(450, 60, "Run Through My Career - Harshit", { fontSize: '22px', fill: '#00ffcc' }).setOrigin(0.5);
-  this.add.text(450, 90, "Press ↑ / SPACE / Tap to Jump & Collect Skills!", { fontSize: '16px', fill: '#ccc' }).setOrigin(0.5);
-
-  // Education & project messages
-  const messages = [
-    "🎓 Graduated from G.L.T Saraswati Bal Mandir, Nehru Nagar!",
-    "📘 Completed BSc (H) Electronics!",
-    "🎓 Pursuing MSc Informatics!",
-    "🏥 Built Hospital Management System Project!"
-  ];
-  messages.forEach((msg, i) => {
-    this.time.addEvent({ delay: 2000 + i * 3000, callback: () => showPopup(this, msg) });
-  });
-
-  // Input controls
-  cursors = this.input.keyboard.createCursorKeys();
-
-  // Jump button (for mobile)
-  document.getElementById("jumpBtn").addEventListener("click", jump);
-  this.input.on('pointerdown', jump); // Mouse/touch click
-}
-
-function update() {
-  if (gameOver) return;
-
-  // Jump controls (↑ or spacebar)
-  if (
-    (cursors.up.isDown || cursors.space.isDown || this.input.activePointer.isDown) &&
-    player.body.touching.down &&
-    jumpAllowed
-  ) {
-    jump();
+  // Generate falling coins (Subway Surfer style)
+  for(let i=0; i<10; i++) {
+    let coin = document.createElement('img');
+    coin.src = 'https://i.ibb.co/WV2pPMf/coin.png';
+    coin.classList.add('coin');
+    coin.style.setProperty('--pos', Math.random());
+    coin.style.animationDelay = Math.random()*5 + 's';
+    document.body.appendChild(coin);
   }
-
-  // Move obstacles
-  obstacles.children.iterate(ob => {
-    ob.x -= 3;
-    if (ob.x < -50) ob.x = 950;
-  });
-
-  // Move skills
-  skills.children.iterate(skill => {
-    skill.x -= 2;
-    if (skill.x < -50) skill.x = 950;
-  });
-
-  // End screen trigger
-  if (score >= 80) showEndScreen(this);
-}
-
-function jump() {
-  if (player && player.body && player.body.touching.down) {
-    player.setVelocityY(-330);
-  }
-}
-
-function collectSkill(player, skill) {
-  skill.disableBody(true, true);
-  score += 10;
-  scoreText.setText('Career XP: ' + score);
-  showPopup(this, `+ ${skill.getData('skillName')} Unlocked!`);
-}
-
-function hitObstacle(player, obstacle) {
-  this.physics.pause();
-  player.setTint(0xff0000);
-  gameOver = true;
-  showPopup(this, "💥 Hit a Career Challenge! Try Again!");
-  this.time.delayedCall(3000, () => location.reload());
-}
-
-function showPopup(scene, text) {
-  const popup = scene.add.text(450, 200, text, {
-    fontSize: '20px',
-    fill: '#00ffcc',
-    backgroundColor: '#0008',
-    padding: { x: 10, y: 5 }
-  }).setOrigin(0.5);
-  scene.time.delayedCall(1500, () => popup.destroy());
-}
-
-function showEndScreen(scene) {
-  gameOver = true;
-  scene.add.rectangle(450, 225, 900, 450, 0x000000, 0.85);
-  scene.add.text(450, 160, "🎉 You’ve Reached the End of Harshit’s Journey!", { fontSize: '22px', fill: '#00ffcc' }).setOrigin(0.5);
-  scene.add.text(450, 200, "Career XP: " + score, { fontSize: '18px', fill: '#fff' }).setOrigin(0.5);
-
-  const contactText = [
-    "📍 Location: New Delhi",
-    "📧 Email: rharshit1111@gmail.com",
-    "🎯 Skills: SQL, Python, C/C++, Java, HTML/CSS, Power BI",
-    "🧠 Strengths: Communication, Project Management"
-  ];
-
-  contactText.forEach((line, i) => {
-    scene.add.text(450, 240 + i * 30, line, { fontSize: '16px', fill: '#ccc' }).setOrigin(0.5);
-  });
-
-  scene.add.text(450, 400, "Press F5 or Tap to Replay", { fontSize: '14px', fill: '#888' }).setOrigin(0.5);
-}
-new Phaser.Game(config);
 </script>
+
 </body>
 </html>
